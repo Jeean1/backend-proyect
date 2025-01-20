@@ -1,7 +1,5 @@
-export async function activeController(req, res) {
+import { status } from "../../../helpers/status";
 
-
-
-    return res.status
-
+export async function loginController(req, res) {
+  return res.status(status.success);
 }
