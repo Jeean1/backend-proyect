@@ -1,18 +1,13 @@
-require("dotenv").config(); // Carga las variables del archivo .env
-const express = require("express");
+import "dotenv/config"; // Importa dotenv
+import express from "express";
+import router from "./routes/auth/index.js"; // Importa el router con ESModules
+
 const app = express();
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 3000;
 
-// Middleware para analizar JSON
 app.use(express.json());
+app.use("/auth", router);
 
-// console.log("testing here");
-// Ruta principal
-app.get("/", (req, res) => {
-  res.send("¡Hola, mundo desde Node.js!");
-});
-
-// Iniciar el servidor
 app.listen(PORT, () => {
-  console.log(`🚀🚀 Server at http://localhost:${PORT} 🚀🚀`);
+  console.log(`🚀🚀 Server running at http://localhost:${PORT} 🚀🚀`);
 });
