@@ -1,6 +1,6 @@
 import { readDbQuery } from "../config/db/dbQuery.js";
 
-export async function validateExistenceUserQuery(email) {
+export async function getUserByEmailQuery(email) {
   const sqlSelect = `SELECT * FROM USERS WHERE EMAIL = $1`;
 
   try {
