@@ -5,13 +5,9 @@ import { status } from "./status.js";
 
 dotenv.config();
 
-export function authenticateHelper(strategy, expiresIn = "24H") {
-  console.log(strategy);
-
+export function authenticateHelper(strategy, expiresIn = "1H") {
   return async (req, res, next) => {
     try {
-      console.log(strategy, req.body, "v2");
-
       passport.authenticate(strategy, (err, user, info) => {
         if (err) {
           console.error(err);
@@ -26,7 +22,6 @@ export function authenticateHelper(strategy, expiresIn = "24H") {
             .send({ error: true, message: info.message });
         }
 
-        console.log("act here");
         req.login(user, () => {
           if (user?.id) {
             const token = jwt.sign(
@@ -37,13 +32,18 @@ export function authenticateHelper(strategy, expiresIn = "24H") {
               }
             );
 
+            res.cookie("token", token, {
+              httpOnly: true, // 🔒 Evita que el JS del frontend acceda a la cookie
+              secure: false, // ⚠ Cambia a `true` en producción con HTTPS
+              sameSite: "Lax",
+              maxAge: 3600000, // 1 hora
+            });
+
             // Responder con el token y otros datos
             return res.status(status.success).send({
               auth: true,
               token,
-              // qr: user.qr,
               id_user: user.id,
-              name_user: user,
               message: "Usuario autenticado y logueado",
             });
           } else {
